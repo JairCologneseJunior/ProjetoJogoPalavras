@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
@@ -5,7 +7,7 @@ import java.util.Set;
 public class JogoPalavras {
     private static final int TEMPO_LIMITE_SEGUNDOS = 60;
     private static final int TAMANHO_MINIMO_PALAVRA = 4;
-    private static final String DICIONARIO_ARQUIVO = "/br-utf8.txt";
+    private static final String DICIONARIO_ARQUIVO = "br-utf8.txt";
 
     private final Set<String> palavrasCorretas;
     private final char letraSorteada;
@@ -52,17 +54,23 @@ public class JogoPalavras {
     }
 
     private boolean validarPalavra(String palavra) {
-        try (Scanner fileScanner = new Scanner(getClass().getResourceAsStream(DICIONARIO_ARQUIVO))) {
+        int i =0;
+        try (Scanner fileScanner = new Scanner(new File(DICIONARIO_ARQUIVO))) {
             while (fileScanner.hasNextLine()) {
                 String linha = fileScanner.nextLine().trim().toLowerCase();
+                //System.out.println(linha);
                 if (linha.equals(palavra)) {
                     return true;
                 }
+                i++;
             }
         } catch (NullPointerException e) {
+            e.printStackTrace();
             System.err.println("Arquivo de dicionário não encontrado.");
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
         }
-
+        //System.out.println(i);
         return false;
     }
 }
